@@ -1,0 +1,18 @@
+# Core dependencies
+pandas>=2.0.0
+numpy>=1.24.0
+requests>=2.31.0
+
+# Timezone support
+tzdata>=2023.3; platform_system == "Windows"
+
+# Optional: For YAML config parsing
+pyyaml>=6.0
+
+# Optional: For progress bars
+tqdm>=4.65.0
+
+# Development dependencies (optional)
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0

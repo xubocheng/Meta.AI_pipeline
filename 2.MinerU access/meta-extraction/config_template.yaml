@@ -1,0 +1,157 @@
+# ============================================================================
+# Meta-Extraction System Configuration Template
+# ============================================================================
+
+# LLM API Configuration
+llm:
+  api_key: "YOUR_API_KEY_HERE"              # ← REQUIRED: Fill in your DeepSeek API key
+  base_url: "https://api.deepseek.com"
+  api_path: "/v1/chat/completions"
+  model: "deepseek-chat"                    # Options: "deepseek-chat", "deepseek-reasoner"
+  temperature: 0.0                          # Deterministic extraction (0.0-1.0)
+  timeout_s: 150                            # Request timeout in seconds
+  max_tokens: 3000                          # Max output tokens per call
+
+# Paths Configuration
+paths:
+  input_dir: "./input"                      # Directory containing .md/.txt/.html files
+  output_dir: "./output"                    # Directory for CSV outputs
+  logs_dir: "./output/logs"                 # Directory for diagnostic logs
+
+# Concurrency Configuration
+concurrency:
+  max_workers_files: 16                     # File-level parallelism (4-32 recommended)
+  max_workers_calls: 16                     # LLM call-level parallelism
+  llm_rate_cap_per_min: 60                  # Rate limit (calls/minute)
+
+# Extraction Parameters
+extraction:
+  # Anchor detection
+  max_anchors_per_doc: 40                   # Max data anchors per document
+  pad_around_anchor: 1200                   # Context padding (chars)
+  
+  # Context limits
+  chars_limit_metadata: 24000               # Stage 0 metadata context
+  chars_limit_anchor: 12000                 # Stage 1 anchor context
+  chars_limit_stage2: 20000                 # Stage 2 gap-filling context
+  docwide_char_limit: 96000                 # Document-wide context
+  
+  # Behavior flags
+  docwide_eager_apply_samples: true         # Apply docwide rules in Stage 1
+  enable_overlap_suppression: true          # Suppress overlapping anchors
+  overlap_threshold: 0.6                    # Overlap ratio threshold
+
+# Domain-Specific Configuration
+outcomes:
+  # Canonical outcome set (do not modify unless necessary)
+  canonical_set:
+    - "ADG"
+    - "ADFI"
+    - "FCR"
+    - "G/F"
+  
+  # Outcome synonyms for recognition
+  synonyms:
+    ADG:
+      - "adg"
+      - "average daily gain"
+      - "daily gain"
+      - "dwg"
+      - "平均日增重"
+      - "日增重"
+    ADFI:
+      - "adfi"
+      - "average daily feed intake"
+      - "feed intake"
+      - "日采食量"
+      - "平均日采食量"
+    FCR:
+      - "fcr"
+      - "feed conversion ratio"
+      - "feed:gain"
+      - "feed/gain"
+      - "料肉比"
+      - "f:g"
+    G/F:
+      - "g/f"
+      - "g:f"
+      - "gain:feed"
+      - "gain/feed"
+      - "feed efficiency"
+      - "增重:采食"
+      - "效率"
+  
+  # Default anchor keywords
+  default_keywords:
+    - "average daily gain"
+    - "adg"
+    - "average daily feed intake"
+    - "adfi"
+    - "feed conversion"
+    - "fcr"
+    - "g:f"
+    - "g/f"
+    - "gain:feed"
+    - "gain/feed"
+    - "feed efficiency"
+    - "table"
+    - "表"
+    - "结果"
+
+# Stage 2 Validation
+validation:
+  max_fillmissing_rows: 100                 # Cost control: max LLM gap-filling calls
+  enable_rule_validation: true              # Enable zero-cost rule checks
+  enable_llm_validation: true               # Enable targeted LLM gap filling
+
+# Output Configuration
+output:
+  encoding: "utf-8-sig"                     # CSV encoding (utf-8-sig for Excel compatibility)
+  write_timestamped_copies: true            # Write date-stamped copies
+  
+  # Column order (do not modify)
+  overview_cols:
+    - "Study"
+    - "Country"
+    - "Authors"
+    - "Location"
+    - "N_total"
+    - "pig_breeds"
+    - "Growth_stage"
+    - "Initial_body_weight"
+    - "final_body_weight"
+    - "Treatment_doses"
+    - "Control_group"
+    - "Treatment_groups"
+    - "replicates_per_group"
+    - "pigs_per_replicate"
+    - "n_unit_preferred"
+    - "n_is_computed"
+    - "compute_note"
+    - "Outcomes_list_raw"
+    - "Outcomes_list_rawtoex"
+    - "Outcomes_list_extract"
+    - "doc_hash"
+
+# Logging Configuration
+logging:
+  level: "INFO"                             # Options: DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s [%(levelname)s] %(message)s"
+  console_output: true                      # Print logs to console
+  file_output: true                         # Write logs to file
+
+# Advanced Settings (modify with caution)
+advanced:
+  # Retry settings
+  llm_retries: 2                            # Number of retries on failure
+  backoff_base: 1.6                         # Exponential backoff multiplier
+  initial_delay: 0.6                        # Initial retry delay (seconds)
+  backoff_max: 20.0                         # Max retry delay (seconds)
+  
+  # Validation thresholds
+  sd_abnormal_ratio: 3.0                    # SD > mean * ratio triggers warning
+  sd_warning_ratio: 2.0                     # SD > mean * ratio triggers alert
+  pen_range_min: 3                          # Min valid pen count
+  pen_range_max: 25                         # Max valid pen count
+  pig_range_min: 20                         # Min valid pig count
+  pig_range_max: 500                        # Max valid pig count
