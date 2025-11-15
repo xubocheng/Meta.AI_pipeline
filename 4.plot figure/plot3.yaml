@@ -1,0 +1,104 @@
+# =========================================
+# plot3.yaml —— G/F 气泡图配置模板
+# 与 meta_bubble_GF_from_yaml.R 脚本配套
+# =========================================
+
+# ---------- I/O 路径 ----------
+input:
+  path: "."              # 数据文件夹
+  file: ".csv"      # 输入CSV文件名
+
+output:
+  dir: "."                # 输出文件夹（脚本会自动创建）
+  summary_csv: ".csv"  # 导出的合并结果明细
+  figure_png: "GF_bubble.png"         # 气泡图 PNG
+  figure_pdf: "GF_bubble.pdf"         # 气泡图 PDF
+
+# ---------- 因子水平与顺序 ----------
+# 影响：x轴组合的顺序、图例顺序
+levels:
+  class:
+    - "Probiotics"
+    - "Antimicrobial peptides"
+    - "Enzymes"
+    - "Herbal"
+    - "Plant extracts"
+    - "Prebiotics"
+  new_timepoint:
+    - "piglet"
+    - "growing pig"
+    - "finishing pig"
+
+# ---------- 预处理 ----------
+preprocess:
+  sd_min: 1.0e-6   # 将过小/0 的 SD 提升到该阈值以提高稳定性（单位换算后再生效）
+
+# ---------- 绘图参数 ----------
+plot:
+  # 横轴按合并效应量 TE 排序：'desc' 从大到小；'asc' 从小到大
+  order_by_effect: "asc"
+
+  # 颜色映射（class -> color），可填 HEX 或命名色
+  colors:
+    class:
+      Probiotics: "#1f77b4"
+      Antimicrobial peptides: "#ff7f0e"
+      Enzymes: "#2ca02c"
+      Herbal: "#d62728"
+      Plant extracts: "#9467bd"
+      Prebiotics: "#8c564b"
+
+  # 气泡大小映射（new_timepoint -> 点大小；建议 2 ~ 12）
+  sizes:
+    new_timepoint:
+      piglet: 4
+      "growing pig": 6
+      "finishing pig": 8
+
+  # 设备与分辨率
+  device:
+    width: 16    # 图宽（英寸）
+    height: 8    # 图高（英寸）
+    dpi: 300     # 导出分辨率
+
+  # 主题与坐标轴样式
+  theme:
+    base_size: 10
+    legend_position: "right"  # 'right'/'left'/'top'/'bottom'/'none'
+    xtick_angle: 30           # x轴刻度文字旋转角度
+    xtick_hjust: 1            # x轴刻度文字水平对齐（0~1）
+
+  # 几何元素细节
+  geom:
+    alpha: 0.85        # 点透明度
+    stroke: 1        # 点边框线宽（shape=21等中空点有用）
+    shape: 21          # 点形状（21=圆形中空填充）
+    err_width: 0.15    # 误差线（95%CI）横向宽度
+    err_alpha: 0.8     # 误差线透明度
+
+  # 参考线与坐标范围
+  guides:
+    hline0: true       # 是否画 y=0 的虚线参考线
+  limits:
+    y:                 # Y轴范围（留空=自动）。需要固定范围时取消注释并填写：
+      # - -1.5
+      # - 1.5
+
+  # 文本标签
+  labels:
+    x: "Class × Timepoint"
+    y: "G/F (SMD)"
+    title: "Combined Effect on G/F by Class × Timepoint"
+    subtitle:
+    caption:
+    size_legend: "Timepoint"
+    color_legend: "Class"
+    
+  rules:
+    min_k: 3     # 作图所需最少研究数（例如 3；设为 4/5 也可以）
+    
+meta:
+  method_random_ci: "HK"     # 或 "classic"
+
+
+

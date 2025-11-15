@@ -1,0 +1,87 @@
+# =========================
+# 数据输入与过滤
+# =========================
+input:
+  csv_path: ".csv"   # CSV 路径
+  filters:
+    Outcome: []          # 例如: ["Lipid", "Protein"]；留空则不过滤
+    new_timepoint: []    # 例如: ["baseline", "12w"]；留空则不过滤
+  # 对照的识别：若你的对照不一定用"A"标识，可以写正则自动剔除
+  control_regex: "^(A|control|ctrl|placebo)$"   # 大小写不敏感匹配
+
+# =========================
+# 效应量与合并模型
+# =========================
+effect:
+  measure: "SMD"               # 可选: "SMD" / "WMD"（metafor 中 SMD≈Hedges g，WMD≈MD）
+  model:
+    method: "REML"             # 随机效应估计方法：REML / DL / ML / HS / SJ / FE(固定效应)
+    # 当某个添加剂只有1条研究或RE模型失败时，自动回退到 FE（固定效应）
+  digits: 2                    # 绘图与导出表格的小数位
+
+# =========================
+# 样本量与研究数的聚合
+# =========================
+samples:
+  per_study: "treatments_plus_control"  # 用于每条研究的样本量统计：Tsample + Csample
+  pair_aggregate: "sum"                 # 生成两两边时的样本/研究聚合：sum / min / mean
+  # pair_aggregate=sum -> 边的 sample_n = sample_i + sample_j，study_n 同理
+
+# =========================
+# 边的保留阈值
+# =========================
+thresholds:
+  min_studies_per_treatment: 1      # 一个添加剂最少要有多少研究才参与网络
+  min_total_sample_per_treatment: 0 # 一个添加剂总样本量下限
+
+# =========================
+# 绘图外观
+# =========================
+plot:
+  # 布局固定为圆形（脚本里已强制 circle）
+  node_fill: "#C7E2F3"
+  node_border: "white"
+  node_alpha: 1
+  edge_color: "grey25"
+  edge_alpha: 0.9
+
+  node_size_range: [4, 14]
+  edge_width_range: [0.2, 1.3]
+
+  show_effect_labels: true
+  label_size_effect: 4.0
+  node_label_size: 6.0
+  node_label_fontface: "bold"
+
+  title: "Network Meta-Analysis"
+  subtitle: ""
+  caption: ""
+
+  # 外层圆弧与标签位置（配合你最新版脚本）
+  outer_arc_expand: 0.1
+  outer_arc_width: 0.4
+  outer_arc_alpha: 0.4
+  outer_arc_color: "#444444"
+
+  label_radius_extra: 0.03
+  label_box_fill: "white"
+  label_box_alpha: 0.85
+  label_box_size: 0.2
+  
+  legend_text_size: 10
+  legend_title_size: 10
+  legend_key_height: 0.8   # “行”数；越大越高
+  legend_key_width: 1.2    # “行”数；越大越宽
+
+  seed: 42
+  width: 8
+  height: 8
+  dpi: 300
+
+
+# =========================
+# 输出
+# =========================
+output:
+  edge_table_csv: ".csv"  # 导出两两差值表
+  plot_file: "."           # 网络图文件

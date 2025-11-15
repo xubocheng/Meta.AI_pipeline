@@ -1,0 +1,47 @@
+input:
+  path: "."
+  file: ".csv"
+
+filter:
+  outcomes: ["ADG","ADFI","G/F"]   # 至少包含 ADG 与 ADFI
+
+plot:
+  x_outcome: "ADFI"                # 横轴
+  y_outcome: "ADG"                 # 纵轴
+  class_palette:
+    Probiotics: "#1f77b4"
+    Antimicrobial peptides: "#ff7f0e"
+    Enzymes: "#2ca02c"
+    Herbal: "#d62728"
+    Plant extracts: "#9467bd"
+    Prebiotics: "#8c564b"         
+  alpha: 0.4
+  size_range: [1, 5]              # 气泡半径映射范围
+  stroke_color: "#333333"
+  stroke_width: 0.3
+  shape: 21                        # 21/22/23… 为具有填充和描边的点
+  show_labels: false               # 需要标注研究名时设为 true
+  label_field: "Study"
+  label_size: 2.2
+  label_nudge_x: 0.0
+  label_nudge_y: 0.0
+  x_limits: null              # 可留空（删除此行/设为 null）自动范围
+  y_limits: null
+  add_zero_lines: true
+  theme_base_size: 8
+  legend_position: "right"
+  legend:
+    class_point_size: 3      # 图例里“添加剂”示例点（气泡）的大小（ggplot尺寸单位）
+    key_size_pt: 12          # 图例键格子的尺寸（点 pt），影响留白/触发区
+    text_size: 5            # 图例文字字号（可选）
+
+output:
+  path: "."
+  filename: "bubble_ADG_vs_ADFI.png"
+  pdf_filename: "bubble_ADG_vs_ADFI.pdf"   # 可选；不填则自动改后缀为 .pdf
+  width: 180                       # mm
+  height: 140                      # mm
+  dpi: 300
+
+advanced:
+  bubble_size_metric: "mean"       # mean / min / max / x_only / y_only

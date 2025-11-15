@@ -1,0 +1,73 @@
+input:
+  path: "."
+  file: ".csv"
+output_dir: "."
+random_method: "REML"
+outcomes: ["ADG", "ADFI", "G/F"]
+
+figure:
+  width: 36                     # 图宽（英寸）
+  height: 18                    # 图高（英寸）
+  dpi: 300
+
+  base_size: 24                 # 全局基础字号（ggplot2 主题用）
+  label_size: 10                # 左/右文本面板中的文字字号
+  title_size: 36                # 顶部标题字号
+
+  point_rgb: [176, 126, 225]     # 森林图点的 RGB 颜色（0–255）
+  point_size: 8                 # 点大小
+  err_linewidth: 2              # 误差线线宽
+  vline_linewidth: 1.2          # 中线(0)的虚线线宽
+  
+  figure:
+  order:
+    class: ["Antimicrobial peptides", "Enzymes", "Herbal", "Plant extracts", "Prebiotics", "Probiotics"]
+    stage: ["piglet","growing pig","finishing pig"]
+  
+  # 三大面板（左/中/右）相对宽度
+  panel_widths: [2.3, 1.0, 1.6]
+
+  # 左面板三列：class / k / WMD
+  left_cols_width: [0.75, 0.75, 0.35, 1.05]   # Class, Time, k, WMD
+  left_cols_just:  [0.0,  0.0,  0.6,  0.6]
+  # 右面板三列：SMD / I² / P(Egger)
+  right_cols_width: [1.05, 0.45, 0.55]
+  right_cols_just:  [0.25, 0.5, 0.5]
+
+  # 列内留白（越大越不易挤）
+  col_padding: 0.02
+  
+  # 列名（可改）
+  left_headers:  ["Class", "Stage", "Sample k", "WMD (95% CI)"]
+  right_headers: ["SMD (95% CI)", "I² (%)", "P(Egger)"]
+  
+  # 主标题模板（支持 {OUTCOME}, {METHOD_TAU}）
+  title_template: "Meta-analysis ({OUTCOME}) — Random-effects {METHOD_TAU} (Knapp-Hartung)"
+  
+  # 分隔横线样式与“全局统一横线”
+  header_rule_linewidth: 2.0
+  header_rule_color: "#713ECC"
+  header_rule_unified: true       # true=绘制一条跨三面板的连贯横线
+  header_rule_y_rel: 0.935        # 横线相对 body 的垂直位置（0底~1顶），可微调
+
+  # 森林图表头与轴标签
+  forest_header_label: "Forest plot SMD"
+  forest_header_just: 0.5         # 0=左, 0.5=中, 1=右
+  forest_xlab: ""
+  forest_ylab: ""
+
+  # 森林图背景（只填充坐标轴内第一/第二象限）
+  forest_bg_fill: "#D7BEF0"
+  forest_bg_alpha: 99.0           # ← 透明度（新增/可调）
+  forest_bg_r: 0.05
+
+
+  # 参考线（默认不画）
+  show_zero_vline: false
+
+  # 标题与 class 对齐（开关+微调）
+  title_align_to_class: true
+  title_x_nudge: 0.0
+  
+  save_pdf_each: true   # 每个图都导出 PDF（默认 true）
+  save_pdf_all:  false  # 合并导出一个多页 PDF（默认 false）

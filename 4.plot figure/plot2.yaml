@@ -1,0 +1,65 @@
+# ---------- 输入/输出 ----------
+input:
+  path: "."
+  file: ".csv"
+
+output:
+  path: "."
+  stub: "adg_adfi"
+
+# ---------- 筛选 ----------
+filter:
+  class_keep:
+    - "Probiotics"
+    - "Antimicrobial peptides"
+    - "Enzymes"
+    - "Herbal"
+    - "Plant extracts"
+    - "Prebiotics"
+  stage_keep:
+    - "piglet"
+    - "growing pig"
+    - "finishing pig"
+
+# ---------- 统计（随机效应元分析参数） ----------
+meta:
+  method_tau: "REML"
+  hakn: true
+
+# ---------- 调色板 ----------
+palette:
+  class_colors:
+    "Probiotics": "#1f77b4"
+    "Antimicrobial peptides": "#ff7f0e"
+    "Enzymes": "#2ca02c"
+    "Herbal": "#d62728"
+    "Plant extracts": "#9467bd"
+    "Prebiotics": "#8c564b"
+  # 不再使用阶段明暗，已移除 stage_lightness
+
+# ---------- 绘图参数 ----------
+plot:
+  width: 9
+  height: 7
+  dpi: 300
+  export_svg: false
+  export_pdf: true
+  pdf_family: "Noto Sans CJK SC"   # 确认系统已安装该字体
+  size_range: [1, 9]              # 仅用于给默认值参考
+  stage_sizes:                      # 直接指定各阶段点大小（建议落在 size_range 内）
+    "piglet": 3
+    "growing pig": 6
+    "finishing pig": 9
+  stroke: 0.3
+  alpha: 0.95
+  legend_position: "right"
+  grid_minor: false
+  zero_lines: true
+  xlim: null
+  ylim: null
+  pad_ratio: 0.05
+  xlab: "ADFI (SMD, random effects)"
+  ylab: "ADG (SMD, random effects)"
+  title: "ADG vs ADFI (SMD) by Class × Stage"
+  subtitle: "点大小 = 阶段；颜色 = 类别"
+  caption: ""
